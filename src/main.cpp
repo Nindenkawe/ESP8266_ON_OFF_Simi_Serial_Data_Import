@@ -15,6 +15,7 @@ bool messageReady = false;
 void setup(){
     Serial.begin(115200);
     Serial.print("Zone A1 online");
+    delay(2500);
 
 pinMode(trigPin1, OUTPUT);
 pinMode(echoPin1, INPUT);
