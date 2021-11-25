@@ -1,6 +1,10 @@
 #Require modules,
-import json, serial, time
+from machine import Pin, UART
+import json
 
+Rx = machine.Pin(3, Pin.IN)
+Tx = machine.Pin(1, Pin.OUT)
+output = json.dumps(doc)
 
  
 #json doc file
