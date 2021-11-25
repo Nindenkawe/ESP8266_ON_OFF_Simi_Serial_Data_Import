@@ -1,6 +1,6 @@
 #Require modules,
-from machine import Pin, UART
-import json
+from machine import Pin
+import json, time, serial
 
 Rx = machine.Pin(3, Pin.IN)
 Tx = machine.Pin(1, Pin.OUT)
