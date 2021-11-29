@@ -1,16 +1,27 @@
 #Require modules,
-from machine import Pin
-import json, time, serial
+import json, serial, time
+from machine import Pin, ADC
+from hcsr04 import HCSR04
+import time
 
-Rx = machine.Pin(3, Pin.IN)
-Tx = machine.Pin(1, Pin.OUT)
-output = json.dumps(doc)
+sensor = HCSR04(trigger_pin=16, echo_pin=0)
+sensor_state = True
+distance = sensor.distance_cm()
+
+while True:
+    if sensor_state == True and distance > 20:
+        print(" 1 slot free ")
+        time.sleep_us(10)
+    elif distance < 15:
+        print("Parking full")
+        time.sleep_us(10)
+    else:
+        print("offline")
+        break
 
  
 #json doc file
-doc ={
-    "doc_packet": [],
-}
+doc = []
 
 doc = json.dumps(doc)
 
