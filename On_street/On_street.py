@@ -16,4 +16,4 @@ def read_sensor_state(sensor_data):
         print("Offline")
     return sensor_data
 while True:
-    read_sensor_state(sensor_data)
+    print(read_sensor_state(sensor_data))
