@@ -15,7 +15,7 @@ def readCOM3():
     time.sleep(1)
 
 
-    if True:
+    if  True:
         while (doc.inWaiting() == 0):
             pass
         doc_packet = doc.readline()
