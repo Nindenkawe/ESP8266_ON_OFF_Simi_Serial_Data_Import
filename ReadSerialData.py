@@ -1,22 +1,24 @@
-#Require modules,
+#Required modules,
 import json, serial, time
  
 #json doc file
-doc = []
 
-doc = json.dumps(doc)
+def readCOM3():
+    doc = []
 
-file = open ('on_street_doc.json', 'a')
-file.write(doc)
-file.close()
+    doc = json.dumps(doc)
+    file = open ('on_street_doc.json', 'a')
+    file.write(doc)
+    file.close()
 
-doc = serial.Serial('COM5' ,115200)
-time.sleep(1)
+    doc = serial.Serial('COM3' ,115200)
+    time.sleep(1)
 
 
-while True:
-    while (doc.inWaiting() == 0):
-        pass
-    doc_packet = doc.readline()
-    doc_packet = str(doc_packet, 'utf8')
-    print(doc_packet)
+    if True:
+        while (doc.inWaiting() == 0):
+            pass
+        doc_packet = doc.readline()
+        doc_packet = str(doc_packet, 'utf8')
+        return(doc_packet)
+print(readCOM3())
