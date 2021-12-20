@@ -11,13 +11,14 @@ def readCOM3():
     file.write(doc)
     file.close()
 
-    doc = serial.Serial('COM3' ,115200)
+    doc = serial.Serial('COM3' ,9600)
     time.sleep(1)
 
-    if  True:
-        while (doc.inWaiting() == 0):
+    while  True:
+        if (doc.inWaiting() == 0):
             pass
         doc_packet = doc.readline()
         doc_packet = str(doc_packet, 'utf8')
         return(doc_packet)
-print(readCOM3())
+while True:
+    print(readCOM3())
