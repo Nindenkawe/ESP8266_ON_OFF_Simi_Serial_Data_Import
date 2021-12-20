@@ -1,85 +1,92 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <SPI.h>
-#include <HCSR04.h>
+#include <MFRC522.h>
+#include <Servo.h>
 #include <Wire.h>
 
-//define Pins
-#define trigPin1 11
-#define echoPin1 12
-
-long duration, distance, RightSensor;
-String message = "";
-bool messageReady = false;
-
+#define SS_PIN 10
+#define RST_PIN 9
+//......................................................................................................................................................
+MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
+Servo myservo;  // create servo object to control a servo
+                // twelve servo objects can be created on most boards
+int pos = 0;    // variable to store the servo position
+//............................
 void setup(){
-    Serial.begin(115200);
-    Serial.print("Zone A1 online");
-    delay(2500);
-
-pinMode(trigPin1, OUTPUT);
-pinMode(echoPin1, INPUT);
-
+  Serial.begin(115200);   // Initiate a serial communication
+  SPI.begin();      // Initiate  SPI bus
+  mfrc522.PCD_Init();   // Initiate MFRC522
+  Serial.println("Approximate your card to the reader...");
+  Serial.println("....||........||........||..............||..........||..........||...||.............||....................||");
+//.......................................................................................................................................................
+  myservo.attach(8);
+//.......................................................................................................................................................
+ 
 }
-
-void SonarSensor(int trigPin,int echoPin){
-    
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  duration = pulseIn(echoPin, HIGH);
-  distance = (duration/2) / 29.1;
-  delay(1500);
-}
-
+// Look for new cards
 void loop()
   {
-    // Monitor serial communication
-  while(Serial.available()) {
-    message = Serial.readString();
-    messageReady = true;
+if ( ! mfrc522.PICC_IsNewCardPresent())
+  {
+    return;
   }
-  // Only process message if there's one
-  if(messageReady) {
-    // The only messages we'll parse will be formatted in JSON
-    DynamicJsonDocument doc(1024); // ArduinoJson version 6+
-    // Attempt to deserialize the message
-    DeserializationError error = deserializeJson(doc,message);
-    if(error) {
-      Serial.print(F("deserializeJson() failed: "));
-      Serial.println(error.c_str());
-      messageReady = false;
-      return;
-    }
-    if(doc["type"] == "request") {
-      doc["type"] = "response";
-      // Get data from sensors
-      doc["distance"] = digitalRead(trigPin1);
-      doc["duration"] = digitalRead(echoPin1);
-      serializeJson(doc,Serial);
-    }
-    messageReady = false;
-  } 
-  SonarSensor(trigPin1, echoPin1);
-  RightSensor = distance;
-  Serial.print(RightSensor);
-  Serial.print(" - ");
+  // Select one of the cards
+  if ( ! mfrc522.PICC_ReadCardSerial()) 
+  {
+  return;
+  }
+  //.......................................................................................................................................................
+    // Look for new cards
+if ( ! mfrc522.PICC_IsNewCardPresent()) 
+{
+  return;
+}
+  // Select one of the cards
+if ( ! mfrc522.PICC_ReadCardSerial()) 
+{
+  return;
+}
+  //Show UID on serial monitor
+  Serial.print("UID tag :");
+  String content= "";
+  byte letter;
+for (byte i = 0; i < mfrc522.uid.size; i++) 
+  {
+    Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
+    Serial.print(mfrc522.uid.uidByte[i], HEX);
+    content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
+    content.concat(String(mfrc522.uid.uidByte[i], HEX));
+  }
+    Serial.println();
+    Serial.print("Message : ");
+    content.toUpperCase();
+if(content.substring(1) == "CC 47 37 18") //change here the UID of the card/cards that you want to give access
+{
+    Serial.println("Authorized access8");
+    
+    for (pos = 0; pos <= 90; pos += 1){ // goes from 0 degrees to 180 degrees
+    // in steps of 1 degree
+    myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(15);                       // waits 15ms for the servo to reach the position
+  }
+  delay (3000);
 
-if (RightSensor > 100){
-    //Serial print
-    Serial.println("1 Slots Free, || Parking Available");
-    delay(1500);
+  for (pos = 90; pos >= 0; pos -= 1){ // goes from 180 degrees to 0 degrees
+    myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(15);                       // waits 15ms for the servo to reach the position
   }
-else if(RightSensor <= 100){
-    //Serial print
-    Serial.println("0 Slots Free, || Parking full");
-    delay(1500);
+  
+}
+
+else if (content.substring(1) == "4A BF 71 AE") //change here the UID of the card/cards that you want to give access
+  {
+    Serial.println("Authorized access7");
+  
   }
+ 
 else{
-    //Serial print
-    Serial.println("Out of Service");
-    delay(1500);
+    Serial.println(" Access denied");
+    delay(1000);
   }
 }

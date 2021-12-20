@@ -14,7 +14,6 @@ def readCOM3():
     doc = serial.Serial('COM3' ,115200)
     time.sleep(1)
 
-
     if  True:
         while (doc.inWaiting() == 0):
             pass
