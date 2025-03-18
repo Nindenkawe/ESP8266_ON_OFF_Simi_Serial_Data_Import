@@ -5,8 +5,8 @@ import sys
 from main import run  # Directly import the run function from main.py
 
 # WiFi credentials
-SSID = "Wutang_LAN-2G"
-PASSWORD = "..,123456"
+SSID = ""
+PASSWORD = ""
 
 # Pin definitions for health check
 MOTOR_PIN = 5

@@ -1,10 +1,6 @@
 import machine, time
 from machine import Pin
 
-__version__ = '0.2.0'
-__author__ = 'Roberto Sánchez'
-__license__ = "Apache License 2.0. https://www.apache.org/licenses/LICENSE-2.0"
-
 class HCSR04:
     """
     Driver to use the untrasonic sensor HC-SR04.

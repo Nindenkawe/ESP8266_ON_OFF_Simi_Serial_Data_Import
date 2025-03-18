@@ -5,7 +5,7 @@ import logging
 from arduino_iot_cloud import ArduinoCloudClient
 
 WIFI_SSID = "Wu-Tang_LAN"
-WIFI_PASSWORD = "..,123456"
+WIFI_PASSWORD = ""
 DEVICE_ID = "Hotspot"
 SECRET_KEY = "..,1234567"
 

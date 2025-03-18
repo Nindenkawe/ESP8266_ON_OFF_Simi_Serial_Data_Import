@@ -9,8 +9,8 @@ gc.collect()
 ssid = 'Wutang-Wan'
 password = '..,123456'
 mqtt_server = '10.0.2.15'
-user = 'nindenka'
-password = 'Robinson'
+user = ''
+password = ''
 client_id = ubinascii.hexlify(machine.unique_id())
 topic_sub = b'notification'
 topic_pub = b'hello'
